@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+   admin
+{% endblock %}
+
+{% block content %}
+  <h1>Requests to approve</h1>
+
+  <table class="table">
+   <thead>
+     <tr>
+       <th scope="col">#</th>
+       <th scope="col">Email</th>
+       <th scope="col">Username</th>
+       <th scope="col">Type</th>
+       <th scope="col">Image</th>
+       <th scope="col">Created_at</th>
+       <th scope="col">Verified</th>
+       <th scope="col">Approval</th>
+       <th scope="col">Delete</th>
+     </tr>
+   </thead>
+   <tbody>
+      {% for userr in users %}
+     <tr>
+       <th scope="row">1</th>
+       <td>{{userr.email}}</td>
+       <td>{{userr.username}}</td>
+       <td>{{userr.typee}}</td>
+       <td> <a href="{{ userr.img.url }}" target="_blank"> 
+         img
+       </a></td>
+       <td>{{userr.date_joined}}</td>
+       <td>{{userr.status}}</td>
+       <td><a href="{% url "verify_account" userr.pk %}" class="btn btn-success">Verify</a></td>
+       <td><a href="{% url "delete_account" userr.pk %}" class="btn btn-danger">Delete</a></td>
+     </tr>
+     {% endfor %}
+   </tbody>
+ </table>
+{% endblock  %}
+
+class Custom_user(AbstractUser):
+    TYPE_CHOICES = [
+        ('admin', 'Administrator'),
+        ('client', 'Client'),
+        ('freelancer', 'Freelancer'),
+    ]
+    type=models.CharField(max_length=50,null=False,blank=False,choices=TYPE_CHOICES,default='')
+    
+    status=models.BooleanField(null=False,default=False) 
+    
+    img=models.ImageField( upload_to="images/",null=True,blank=True,default='')
